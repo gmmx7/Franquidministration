@@ -1,0 +1,4 @@
+# REGISTRO DE VENTAS
+NOTA | FECHA    | PRODUCTOS (clave-cantidad-subtotal) | TOTAL
+-------------------------------------------------------------
+  <<<<<<LISTA VACIA, AGREGUE PRODUCTOS DESDE EL MENU>>>>>>  

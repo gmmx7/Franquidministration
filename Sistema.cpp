@@ -1,0 +1,255 @@
+#include "Sistema.h"
+#include <fstream>
+#include <iostream>
+using namespace std;
+
+Sistema::Sistema() {}
+
+// Función principal
+void Sistema::iniciarSistema() {
+	
+    cout << "Iniciando sistema..." << endl;
+
+    // Persistencia
+    if (existeArchivo(archivoProductos)) {
+        cargarProductos();
+    } else {
+        crearArchivoProductos();
+        cout << "\t--> No se encontro el archivo de productos. \n\t   Se creo uno nuevo con formato base." << endl;
+    }
+
+    if (existeArchivo(archivoVentas)) {
+        cargarVentas();
+    } else {
+        crearArchivoVentas();
+        cout << "\t--> No se encontro el archivo de ventas. \n\t   Se creo uno nuevo con formato base." << endl;
+    }
+	
+	if(consola.esperarEnter()){
+		consola.limpiarConsola();
+		menuPrincipal();
+	}
+}
+
+// ------------------- Persistencia ---------------------
+bool Sistema::existeArchivo(const string& nombreArchivo) {
+    ifstream archivo(nombreArchivo);
+    return archivo.good();
+}
+
+void Sistema::crearArchivoProductos() {
+    ofstream archivo(archivoProductos);
+    archivo << "CLAVE |     NOMBRE     |     MARCA     | EXISTENCIA | PRECIO\n";
+    archivo << "------------------------------------------------------------\n";
+    archivo << "  <<<<<<LISTA VACIA, AGREGUE PRODUCTOS DESDE EL MENU>>>>>>  \n";
+    archivo.close();
+}
+
+void Sistema::crearArchivoVentas() {
+    ofstream archivo(archivoVentas);
+    archivo << "# REGISTRO DE VENTAS\n";
+    archivo << "NOTA | FECHA    | PRODUCTOS (clave-cantidad-subtotal) | TOTAL\n";
+    archivo << "-------------------------------------------------------------\n";
+    archivo << "  <<<<<<LISTA VACIA, AGREGUE PRODUCTOS DESDE EL MENU>>>>>>  \n";
+	archivo.close();
+}
+
+void Sistema::cargarProductos() {
+    ifstream archivo(archivoProductos);
+    if (!archivo.is_open()) {
+        cout << "No se pudo abrir el archivo de productos.\n";
+        return;
+    }
+
+    string linea;
+    // Saltar las primeras 2 líneas de encabezado
+    getline(archivo, linea);
+    getline(archivo, linea);
+
+    while (getline(archivo, linea)) {
+        // Ignorar líneas vacías o que digan "LISTA VACIA"
+        if (linea.find("VACIA") != string::npos || linea.empty()) {
+            continue;
+        }
+
+        Producto nuevo;
+        string clave = "", nombre = "", marca = "";
+        int existencia = 0;
+        float precio = 0.0;
+
+        size_t pos = 0;
+        size_t separador = 0;
+
+        // Extraer Clave
+        separador = linea.find("|", pos);
+        if (separador != string::npos) {
+            clave = consola.limpiarEspacios(linea.substr(pos, separador - pos));
+            pos = separador + 1;
+        }
+
+        // Extraer Nombre
+        separador = linea.find("|", pos);
+        if (separador != string::npos) {
+            nombre = consola.limpiarEspacios(linea.substr(pos, separador - pos));
+            pos = separador + 1;
+        }
+
+        // Extraer Marca
+        separador = linea.find("|", pos);
+        if (separador != string::npos) {
+            marca = consola.limpiarEspacios(linea.substr(pos, separador - pos));
+            pos = separador + 1;
+        }
+
+        // Extraer Existencia 
+        separador = linea.find("|", pos);
+        string existenciaStr = "";
+        if (separador != string::npos) {
+            existenciaStr = consola.limpiarEspacios(linea.substr(pos, separador - pos));
+            existencia = consola.convertirCadenaANumero(existenciaStr);
+            pos = separador + 1;
+        }
+
+        // Extraer Precio
+        string precioStr = consola.limpiarEspacios(linea.substr(pos));
+        precio = consola.convertirCadenaAFloat(precioStr);
+
+        // Validaciones mínimas
+        if (clave.empty() || nombre.empty() || marca.empty() || existencia < 0 || precio < 0) {
+            cout << "Producto mal formado en el archivo, ignorado: " << linea << endl;
+            continue;
+        }
+
+        nuevo.setClave(clave);
+        nuevo.setNombre(nombre);
+        nuevo.setMarca(marca);
+        nuevo.setExistencia(existencia);
+        nuevo.setPrecio(precio);
+
+        gestor.agregarProductoDesdeArchivo(nuevo);
+    }
+
+    archivo.close();
+    cout << "Productos cargados correctamente desde archivo.\n";
+}
+
+
+void Sistema::guardarProductos() {
+	ofstream archivo(archivoProductos);
+
+	if (!archivo.is_open()) {
+		cout << "Error al abrir el archivo de productos para guardar.\n";
+		return;
+	}
+
+	archivo << "CLAVE |     NOMBRE     |     MARCA     | EXISTENCIA | PRECIO\n";
+	archivo << "------------------------------------------------------------\n";
+
+	vector<Producto> productos = gestor.getProductos(); // Usaremos este método, lo implementamos abajo
+
+	if (productos.empty()) {
+		archivo << "  <<<<<<LISTA VACIA, AGREGUE PRODUCTOS DESDE EL MENU>>>>>>  \n";
+	} else {
+		for (int i = 0; i < productos.size(); i++) {
+			Producto p = productos[i];
+			archivo << p.getClave() << " | " 
+					<< p.getNombre() << " | "
+					<< p.getMarca() << " | "
+					<< p.getExistencia() << " | "
+					<< p.getPrecio() << "\n";
+		}
+	}
+	archivo.close();
+}
+
+
+void Sistema::cargarVentas() {
+    cout << "Ventas cargadas correctamente desde archivo.\n";
+}
+
+void Sistema::guardarVentas() {
+    cout << "[guardarVentas()] -> Aqui va la logica para guardar ventas en ventas.txt.\n";
+}
+
+// ------------------- Menús ---------------------
+void Sistema::menuPrincipal() {
+	short opc;
+	do{
+		pantalla.mostrarMenuPrincipal();
+		cin >> opc;
+		consola.limpiarConsola();
+		switch(opc){
+			case 1:{//Agregar producto
+				Producto p;
+				gestor.agregarProducto();
+				break;
+			}
+			case 2:{//Realizar venta
+				
+				break;
+			}
+			case 3:{//Gestionar productos
+				menuProductos();
+				break;
+			}
+			case 4:{//Gestionar ventas
+				
+				break;
+			}
+			case 5:{//Cerrar programa
+				cout << "Saliendo del programa..." << endl;
+				break;
+			}
+			default:{
+				cout << "Accion no valida, intenta de nuevo.\n" << endl;
+				break;
+			}
+		}
+	}while(opc != 5);
+}
+
+void Sistema::menuProductos() {
+    short opc;
+    do{
+    	pantalla.mostrarMenuProductos();
+    	cin >> opc;
+    	
+    	consola.limpiarConsola();
+    	Producto p;
+    	switch(opc){
+    		case 1:{
+				gestor.agregarProducto();
+				guardarProductos();
+				break;
+			}
+			case 2:{ //Borrar producto - relación por clave o nombre
+				//gestor.borrarProducto();
+				break;
+			}
+			case 3:{
+				//gestor.actualizarProducto();
+				break;
+			}
+			case 4:{
+				gestor.mostrarProductos();
+				break;
+			}
+			case 5:{
+				//gestor.buscarProducto();
+				break;
+			}
+			case 6:{ //Salir
+				cout << "Saliendo del gestor...\n" << endl;
+				break;
+			}
+			default:{
+				cout << "Accion no valida, intenta de nuevo\n" << endl;
+				break;
+			}
+		}
+	}while(opc != 6);
+}
+
+void Sistema::menuVentas() {
+    cout << "[menuVentas()] → Aqui ira el menu para gestionar ventas.\n";
+}

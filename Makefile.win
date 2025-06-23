@@ -1,0 +1,49 @@
+# Project: Franquidministration
+# Makefile created by Embarcadero Dev-C++ 6.3
+
+CPP      = g++.exe
+CC       = gcc.exe
+WINDRES  = windres.exe
+OBJ      = main.o Producto.o Venta.o Gestor.o Carrito.o Sistema.o Consola.o Pantalla.o
+LINKOBJ  = main.o Producto.o Venta.o Gestor.o Carrito.o Sistema.o Consola.o Pantalla.o
+LIBS     = -L"C:/Program Files (x86)/Embarcadero/Dev-Cpp/TDM-GCC-64/lib" -L"C:/Program Files (x86)/Embarcadero/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/lib" -static-libgcc
+INCS     = -I"C:/Program Files (x86)/Embarcadero/Dev-Cpp/TDM-GCC-64/include" -I"C:/Program Files (x86)/Embarcadero/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Embarcadero/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include"
+CXXINCS  = -I"C:/Program Files (x86)/Embarcadero/Dev-Cpp/TDM-GCC-64/include" -I"C:/Program Files (x86)/Embarcadero/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Embarcadero/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include" -I"C:/Program Files (x86)/Embarcadero/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/c++"
+BIN      = Franquidministration.exe
+CXXFLAGS = $(CXXINCS) 
+CFLAGS   = $(INCS) 
+DEL      = C:\Program Files (x86)\Embarcadero\Dev-Cpp\DevCpp.exe INTERNAL_DEL
+
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before $(BIN) all-after
+
+clean: clean-custom
+	${DEL} $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+	$(CPP) $(LINKOBJ) -o $(BIN) $(LIBS)
+
+main.o: main.cpp
+	$(CPP) -c main.cpp -o main.o $(CXXFLAGS)
+
+Producto.o: Producto.cpp
+	$(CPP) -c Producto.cpp -o Producto.o $(CXXFLAGS)
+
+Venta.o: Venta.cpp
+	$(CPP) -c Venta.cpp -o Venta.o $(CXXFLAGS)
+
+Gestor.o: Gestor.cpp
+	$(CPP) -c Gestor.cpp -o Gestor.o $(CXXFLAGS)
+
+Carrito.o: Carrito.cpp
+	$(CPP) -c Carrito.cpp -o Carrito.o $(CXXFLAGS)
+
+Sistema.o: Sistema.cpp
+	$(CPP) -c Sistema.cpp -o Sistema.o $(CXXFLAGS)
+
+Consola.o: Consola.cpp
+	$(CPP) -c Consola.cpp -o Consola.o $(CXXFLAGS)
+
+Pantalla.o: Pantalla.cpp
+	$(CPP) -c Pantalla.cpp -o Pantalla.o $(CXXFLAGS)
