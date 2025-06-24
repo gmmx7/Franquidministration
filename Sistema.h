@@ -60,8 +60,10 @@ private:
     void guardarProductos();
     void crearArchivoProductos();
 
+	void realizarVenta();
     void cargarVentas();
     void guardarVentas();
+    void mostrarDetalleVenta(const Venta& v);
     void crearArchivoVentas();
 
     void menuPrincipal();

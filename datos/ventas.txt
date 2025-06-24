@@ -1,4 +1,4 @@
 # REGISTRO DE VENTAS
 NOTA | FECHA | PRODUCTOS (clave-cantidad-subtotal) | TOTAL
 ---------------------------------------------------------
-<<<<<<LISTA VACIA, AGREGUE PRODUCTOS DESDE EL MENU>>>>>>
+1 | 20250624 | 777-1-20000, 777-1-20000 | 40000

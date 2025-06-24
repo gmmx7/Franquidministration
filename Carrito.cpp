@@ -13,13 +13,13 @@ Carrito::Carrito(){
 }
 
 //Getters
-int Carrito::getClaveProducto(){
+int Carrito::getClaveProducto() const{
 	return claveProducto;
 }
-int Carrito::getCantidadProducto(){
+int Carrito::getCantidadProducto() const{
 	return cantidadProducto;
 }
-float Carrito::getSubTotal(){
+float Carrito::getSubTotal() const{
 	return subTotal;
 }
 		

@@ -11,9 +11,9 @@ class Carrito{
 		Carrito();
 		Carrito(int claveProducto, int cantidadProducto, float subTotal);
 		//Getters
-		int getClaveProducto();
-		int getCantidadProducto();
-		float getSubTotal();
+		int getClaveProducto() const;
+		int getCantidadProducto() const;
+		float getSubTotal() const;
 		
 		//Setters
 		void setClaveProducto(int claveProducto);

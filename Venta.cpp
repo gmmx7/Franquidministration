@@ -14,19 +14,20 @@ Venta::Venta(){
 }
 
 //Getters
-int Venta::getNumeroNota(){
+int Venta::getNumeroNota() const{
 	return numeroNota;
 }
 
-int Venta::getFechaNota(){
+int Venta::getFechaNota() const{
 	return fechaNota;
 }
 
-vector<Carrito>& Venta::getItems(){
-	return this->items;
+const vector<Carrito>& Venta::getItems() const {
+	return items;
 }
 
-float Venta::getTotal(){
+
+float Venta::getTotal() const{
 	return total;
 }
 
@@ -44,5 +45,15 @@ void Venta::setTotal(float total){
 }
 
 //Funciones propias de la clase venta
-void Venta::agregarItem(const Carrito& item){}
-void Venta::calcularTotal(){}
+void Venta::agregarItem(const Carrito& item) {
+    items.push_back(item);
+}
+
+void Venta::calcularTotal() {
+    total = 0;
+    for (int i = 0; i < items.size(); i++) {
+        total += items[i].getSubTotal();
+    }
+}
+
+

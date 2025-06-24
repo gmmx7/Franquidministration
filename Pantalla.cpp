@@ -4,7 +4,7 @@ using namespace std;
 
 void Pantalla::mostrarPantallaPrincipal() {
 	cout << " _______________________________________________________________________________________________________________\n";
-	cout << "|\t  _______ _______ _______ _______ _______ _______     ___ ___ _______ ______  _______ _______ _______ \t|\n";
+	cout << "|\t________ _______ _______ _______ _______ _______     ___ ___ _______ ______  _______ _______ _______ \t|\n";
 	cout << "|\t" << R"(|   _   |   _   |   _   |       |   _   |   _   \   |   Y   |   _   |   _  \|       |   _   |   _   |)" << "\t|\n";
 	cout << "|\t|.  |___|.  1___|   1___|.|   | |.  |   |.  l   /   |.  |   |.  1___|.  |   |.|   | |.  1   |   1___|\t|\n";
 	cout << "|\t|.  |   |.  __)_|____   `-|.  |-|.  |   |.  _   1   |.  |   |.  __)_|.  |   `-|.  |-|.  _   |____   |\t|\n";
@@ -25,7 +25,7 @@ void Pantalla::mostrarMenuPrincipal() {
     cout << "\t3. Gestionar Productos\n";
     cout << "\t4. Gestionar ventas\n";
     cout << "\t5. Cerrar programa\n";
-    cout << ">>>Selecciona una opcion: ";
+    cout << "Selecciona una opcion: ";
 }
 
 void Pantalla::mostrarMenuProductos(){
@@ -36,7 +36,18 @@ void Pantalla::mostrarMenuProductos(){
     cout << "\t4. Mostrar lista de productos\n";
     cout << "\t5. Buscar producto\n";
     cout << "\t6. Salir del gestor\n";
-    cout << ">>>Selecciona una opcion: ";
+    cout << "Selecciona una opcion: ";
+}
+
+void Pantalla::mostrarMenuVentas() {
+    cout << "-------- MENU DE VENTAS --------\n";
+    cout << "\t1. Mostrar todas las ventas\n";
+    cout << "\t2. Buscar por numero de nota\n";
+    cout << "\t3. Buscar por fecha\n";
+    cout << "\t4. Registrar nueva venta\n";
+    cout << "\t5. Actualizar venta\n";
+    cout << "\t6. Regresar al menu principal\n";
+    cout << "Seleccione una opción: ";
 }
 
 void Pantalla::mensajeEnter(){

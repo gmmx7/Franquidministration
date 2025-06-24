@@ -19,10 +19,10 @@ class Venta{
 		Venta(int numeroNota, int fechaNot);
 		
 		//Getters
-		int getNumeroNota();
-		int getFechaNota();
-		vector<Carrito>& getItems(); // referencia para poder modificar y leer los productos
-		float getTotal();
+		int getNumeroNota() const;
+		int getFechaNota() const;
+		const vector<Carrito>& getItems() const; // referencia para poder modificar y leer los productos
+		float getTotal() const;
 		
 		//Setters
 		void setNumeroNota(int numeroNota);

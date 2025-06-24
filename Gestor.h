@@ -78,7 +78,7 @@ public:
     Venta* buscarVentaPorNumeroNota(int numeroNota);
     vector<Venta*> buscarVentasPorFecha(int fecha);
 	const vector<Venta>& obtenerVentas() const;
-
+	void mostrarVentas();
     void registrarVenta(const Venta& venta);
 
     int cantidadTotalProductos();
