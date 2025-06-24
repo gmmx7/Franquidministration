@@ -366,23 +366,36 @@ void Gestor::mostrarProductos() {
 
 // Buscar producto por clave
 Producto* Gestor::buscarProducto(const string& clave) {
+    string claveBusqueda = consola.limpiarEspacios(clave);
+    claveBusqueda = consola.toLowerString(claveBusqueda);
+    
     for (int i = 0; i < (int)productos.size(); i++) {
-        if (productos[i].getClave() == clave) {
+        string claveProducto = consola.limpiarEspacios(productos[i].getClave());
+        claveProducto = consola.toLowerString(claveProducto);
+
+        if (claveProducto == claveBusqueda) {
             return &productos[i];
         }
     }
     return nullptr;
 }
 
+
 // Buscar producto por nombre (exacto)
 Producto* Gestor::buscarProductoPorNombre(const string& nombre) {
+    string nombreBuscado = consola.toLowerString(nombre);
+    
     for (int i = 0; i < (int)productos.size(); i++) {
-        if (productos[i].getNombre() == nombre) {
+        string nombreProducto = consola.toLowerString(productos[i].getNombre());
+
+        if (consola.contieneSubcadena(nombreProducto, nombreBuscado)) {
             return &productos[i];
         }
     }
     return nullptr;
 }
+
+
 
 // Buscar venta por número de nota
 Venta* Gestor::buscarVentaPorNumeroNota(int numeroNota) {
@@ -400,6 +413,25 @@ vector<Venta*> Gestor::buscarVentasPorFecha(int fecha) {
     for (int i = 0; i < (int)ventas.size(); i++) {
         if (ventas[i].getFechaNota() == fecha) {
             resultado.push_back(&ventas[i]);
+        }
+    }
+    return resultado;
+}
+
+vector<Producto*> Gestor::buscarProductosPorCoincidencia(const string& termino) {
+    vector<Producto*> resultado;
+    string terminoMinus = consola.limpiarEspacios(termino);
+    terminoMinus = consola.toLowerString(terminoMinus);
+
+    for (int i = 0; i < (int)productos.size(); i++) {
+        string claveProducto = consola.limpiarEspacios(productos[i].getClave());
+        string nombreProducto = consola.limpiarEspacios(productos[i].getNombre());
+        claveProducto = consola.toLowerString(claveProducto);
+        nombreProducto = consola.toLowerString(nombreProducto);
+
+        if (consola.contieneSubcadena(claveProducto, terminoMinus) ||
+            consola.contieneSubcadena(nombreProducto, terminoMinus)) {
+            resultado.push_back(&productos[i]);
         }
     }
     return resultado;

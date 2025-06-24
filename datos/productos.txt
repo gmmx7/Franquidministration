@@ -1,3 +1,4 @@
 CLAVE |     NOMBRE     |     MARCA     | EXISTENCIA | PRECIO
 ------------------------------------------------------------
-23 | Arduino | Lego | 34 | 78
+777 |  | Platz Arnold | 2 | 20000
+33 | Mike | Mentzer | 1 | 23434

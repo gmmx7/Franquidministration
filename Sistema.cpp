@@ -309,6 +309,7 @@ void Sistema::crearArchivoVentas() {
     archivo.close();
 }
 
+/*
 void Sistema::cargarProductos() {
     ifstream archivo(archivoProductos);
     if (!archivo.is_open()) {
@@ -418,6 +419,66 @@ void Sistema::cargarProductos() {
 
     archivo.close();
 }
+*/
+void Sistema::cargarProductos() {
+    ifstream archivo(archivoProductos);
+    if (!archivo.is_open()) {
+        cout << "No se pudo abrir archivo productos.\n";
+        return;
+    }
+
+    string linea;
+
+    // Saltar encabezados (2 líneas)
+    getline(archivo, linea);
+    getline(archivo, linea);
+
+    gestor.limpiarProductos();
+
+    while (getline(archivo, linea)) {
+        if (linea == "<<<<<<LISTA VACIA, AGREGUE PRODUCTOS DESDE EL MENU>>>>>>") break;
+
+        string clave, nombre, marca, existenciaStr, precioStr;
+
+        int pos1 = 0;
+        int pos2 = linea.find('|', pos1);
+        if (pos2 == -1) continue;
+        clave = consola.limpiarEspacios(linea.substr(pos1, pos2 - pos1));
+
+        pos1 = pos2 + 1;
+        pos2 = linea.find('|', pos1);
+        if (pos2 == -1) continue;
+        nombre = consola.limpiarEspacios(linea.substr(pos1, pos2 - pos1));
+
+        pos1 = pos2 + 1;
+        pos2 = linea.find('|', pos1);
+        if (pos2 == -1) continue;
+        marca = consola.limpiarEspacios(linea.substr(pos1, pos2 - pos1));
+
+        pos1 = pos2 + 1;
+        pos2 = linea.find('|', pos1);
+        if (pos2 == -1) continue;
+        existenciaStr = consola.limpiarEspacios(linea.substr(pos1, pos2 - pos1));
+
+        pos1 = pos2 + 1;
+        precioStr = consola.limpiarEspacios(linea.substr(pos1));
+
+        // Conversión
+        int existencia = consola.convertirCadenaANumero(existenciaStr);
+        float precio = consola.convertirCadenaAFloat(precioStr);
+
+        if (existencia == -1 || precio < 0) {
+            cout << "Error al convertir datos. Producto omitido.\n";
+            continue;
+        }
+
+        Producto p(clave, nombre, marca, existencia, precio);
+        gestor.agregarProductoDirecto(p);
+    }
+
+    archivo.close();
+}
+
 
 void Sistema::guardarProductos() {
     ofstream archivo(archivoProductos);
@@ -570,26 +631,25 @@ void Sistema::menuProductos() {
             consola.esperarEnter();
             consola.limpiarConsola();
             break;
-        case 5: {
-            string clave;
-            cout << "Ingrese clave del producto a buscar: ";
-            getline(cin, clave);
-            Producto* p = gestor.buscarProducto(clave);
-            if (p != nullptr) {
-                cout << "Producto encontrado:\n";
-                cout << "Clave: " << p->getClave() << "\n";
-                cout << "Nombre: " << p->getNombre() << "\n";
-                cout << "Marca: " << p->getMarca() << "\n";
-                cout << "Existencia: " << p->getExistencia() << "\n";
-                cout << "Precio: " << p->getPrecio() << "\n";
-            }
-            else {
-                cout << "Producto no encontrado.\n";
-            }
-            consola.esperarEnter();
-            consola.limpiarConsola();
-            break;
-        }
+		case 5: {
+		    string termino;
+		    cout << "Ingrese termino de busqueda (clave o nombre, parcial): ";
+		    getline(cin, termino);
+		    vector<Producto*> resultados = gestor.buscarProductosPorCoincidencia(termino);
+		    if (resultados.empty()) {
+		        cout << "No se encontraron productos que coincidan.\n";
+		    } else {
+		        cout << "Productos encontrados:\n";
+		        for (Producto* p : resultados) {
+		            cout << "- Clave: " << p->getClave() << ", Nombre: " << p->getNombre()
+		                 << ", Marca: " << p->getMarca() << ", Existencia: " << p->getExistencia()
+		                 << ", Precio: $" << p->getPrecio() << "\n";
+		        }
+		    }
+		    consola.esperarEnter();
+		    consola.limpiarConsola();
+		    break;
+		}
         case 6:
             cout << "Saliendo del gestor de productos...\n";
             break;

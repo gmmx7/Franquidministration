@@ -23,7 +23,7 @@ int Venta::getFechaNota(){
 }
 
 vector<Carrito>& Venta::getItems(){
-	this->items;
+	return this->items;
 }
 
 float Venta::getTotal(){

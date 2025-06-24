@@ -73,7 +73,8 @@ public:
 
     Producto* buscarProducto(const string& clave);
     Producto* buscarProductoPorNombre(const string& nombre);
-
+	vector<Producto*> buscarProductosPorCoincidencia(const string& termino);
+	
     Venta* buscarVentaPorNumeroNota(int numeroNota);
     vector<Venta*> buscarVentasPorFecha(int fecha);
 	const vector<Venta>& obtenerVentas() const;
