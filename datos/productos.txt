@@ -1,4 +1,3 @@
 CLAVE |     NOMBRE     |     MARCA     | EXISTENCIA | PRECIO
 ------------------------------------------------------------
-38 | Step Up | Lego | 3 | 25
 23 | Arduino | Lego | 34 | 78

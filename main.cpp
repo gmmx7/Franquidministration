@@ -26,7 +26,5 @@ int main(int argc, char** argv) {
 			programaCargado.iniciarSistema();
 		}
 	}
-	
-
 	return 0;
 }
