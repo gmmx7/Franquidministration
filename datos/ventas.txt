@@ -1,4 +1,0 @@
-# REGISTRO DE VENTAS
-NOTA | FECHA | PRODUCTOS (clave-cantidad-subtotal) | TOTAL
----------------------------------------------------------
-1 | 20250624 | 90-3-60 | 60
