@@ -141,4 +141,21 @@ float Consola::convertirCadenaAFloat(const string& entrada) {
     return resultado;
 }
 
+vector<string> Consola::separarPorComas(string linea) {
+    vector<string> partes;
+    string actual = "";
+
+    for (int i = 0; i < (int)linea.length(); i++) {
+        char c = linea[i];
+        if (c == ',') {
+            partes.push_back(actual);
+            actual = "";
+        } else {
+            actual += c;
+        }
+    }
+    if (!actual.empty()) partes.push_back(actual);
+    return partes;
+}
+
 

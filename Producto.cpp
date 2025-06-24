@@ -17,19 +17,19 @@ Producto::Producto(){
 }
 
 //Definir Getters
-string Producto::getClave(){
+string Producto::getClave() {
 	return clave;
 }
 
-string Producto::getNombre(){
+string Producto::getNombre() {
 	return nombre;
 }
 
-string Producto::getMarca(){
+string Producto::getMarca() {
 	return marca;
 }
 
-int Producto::getExistencia(){
+int Producto::getExistencia() {
 	return existencia;
 }
 

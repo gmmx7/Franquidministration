@@ -61,7 +61,7 @@ void Sistema::cargarProductos() {
     }
 
     string linea;
-    // Saltar encabezados (2 líneas)
+    // Saltar encabezados (2 líneas) jhfkahf
     getline(archivo, linea);
     getline(archivo, linea);
 
@@ -95,7 +95,7 @@ void Sistema::cargarProductos() {
         pos1 = pos2 + 1;
         precioStr = consola.limpiarEspacios(linea.substr(pos1));
 
-        // Conversión
+        // Conversiooooon
         int existencia = consola.convertirCadenaANumero(existenciaStr);
         float precio = consola.convertirCadenaAFloat(precioStr);
 
@@ -134,6 +134,7 @@ void Sistema::guardarProductos() {
     archivo.close();
 }
 
+/*
 void Sistema::cargarVentas() {
     ifstream archivo(archivoVentas);
     if (!archivo.is_open()) {
@@ -151,11 +152,87 @@ void Sistema::cargarVentas() {
 
     while (getline(archivo, linea)) {
         if (linea == "<<<<<<LISTA VACIA, AGREGUE PRODUCTOS DESDE EL MENU>>>>>>") break;
-        // Aquí debería parsear las ventas, pero para simplificar el ejemplo
-        // se puede dejar vacío o agregar después si quieres.
+        // Aquí debería parsear las ventas
     }
     archivo.close();
 }
+*/
+void Sistema::cargarVentas() {
+    ifstream archivo(archivoVentas);
+    if (!archivo.is_open()) {
+        cout << "No se pudo abrir archivo ventas.\n";
+        return;
+    }
+
+    string linea;
+    // Saltar encabezados (3 líneas)
+    getline(archivo, linea);
+    getline(archivo, linea);
+    getline(archivo, linea);
+
+    gestor.limpiarVentas();
+
+    while (getline(archivo, linea)) {
+        if (linea.empty() || linea == "<<<<<<LISTA VACIA, AGREGUE PRODUCTOS DESDE EL MENU>>>>>>") break;
+
+        // Ejemplo de línea:
+        // 1 | 20250624 | 101-2-30.0, 102-1-25.0 | 55.0
+
+        int pos1 = 0;
+        int pos2 = linea.find('|');
+        if (pos2 == -1) continue;
+        string notaStr = consola.limpiarEspacios(linea.substr(pos1, pos2 - pos1));
+        int nota = consola.convertirCadenaANumero(notaStr);
+
+        pos1 = pos2 + 1;
+        pos2 = linea.find('|', pos1);
+        if (pos2 == -1) continue;
+        string fechaStr = consola.limpiarEspacios(linea.substr(pos1, pos2 - pos1));
+        int fecha = consola.convertirCadenaANumero(fechaStr);
+
+        pos1 = pos2 + 1;
+        pos2 = linea.find('|', pos1);
+        if (pos2 == -1) continue;
+        string productosStr = consola.limpiarEspacios(linea.substr(pos1, pos2 - pos1));
+
+        pos1 = pos2 + 1;
+        string totalStr = consola.limpiarEspacios(linea.substr(pos1));
+        float total = consola.convertirCadenaAFloat(totalStr);
+
+        // Crear venta
+        Venta venta;
+        venta.setNumeroNota(nota);
+        venta.setFechaNota(fecha);
+
+        // Separar productos
+        vector<string> productos = consola.separarPorComas(productosStr);
+        for (int i = 0; i < (int)productos.size(); i++) {
+            string item = consola.limpiarEspacios(productos[i]);
+
+            int p1 = item.find('-');
+            int p2 = item.find('-', p1 + 1);
+            if (p1 == -1 || p2 == -1) continue;
+
+            string claveStr = item.substr(0, p1);
+            string cantidadStr = item.substr(p1 + 1, p2 - p1 - 1);
+            string subTotalStr = item.substr(p2 + 1);
+
+            Carrito c;
+            c.setClaveProducto(consola.convertirCadenaANumero(claveStr));
+            c.setCantidadProducto(consola.convertirCadenaANumero(cantidadStr));
+            c.setSubTotal(consola.convertirCadenaAFloat(subTotalStr));
+
+            venta.agregarItem(c);
+        }
+
+        // Agregar al sistema
+        venta.calcularTotal(); // opcional
+        gestor.registrarVenta(venta);
+    }
+
+    archivo.close();
+}
+
 
 void Sistema::realizarVenta() {
     consola.limpiarConsola();
@@ -168,12 +245,34 @@ void Sistema::realizarVenta() {
     string fechaStr;
     cout << "Fecha de la venta (formato AAAAMMDD): ";
     getline(cin, fechaStr);
-    int fecha = consola.convertirCadenaANumero(fechaStr);
-    if (fecha < 0) {
-        cout << "Fecha invalida.\n";
-        return;
-    }
-    venta.setFechaNota(fecha);
+	int fecha = consola.convertirCadenaANumero(fechaStr);
+	if (fechaStr.length() != 8 || fecha < 0) {
+	    cout << "Formato de fecha invalido. Debe ser AAAAMMDD.\n";
+	    return;
+	}
+	
+	int anio = fecha / 10000;
+	int mes = (fecha / 100) % 100;
+	int dia = fecha % 100;
+	
+	bool fechaValida = true;
+	if (anio < 2000 || anio > 2100) fechaValida = false;
+	if (mes < 1 || mes > 12) fechaValida = false;
+	if (dia < 1) fechaValida = false;
+	
+	int diasPorMes[] = { 31,28,31,30,31,30,31,31,30,31,30,31 };
+	// Verificamos si es año bisiesto
+	if ((anio % 4 == 0 && anio % 100 != 0) || (anio % 400 == 0)) diasPorMes[1] = 29;
+	
+	if (mes >= 1 && mes <= 12 && dia > diasPorMes[mes - 1]) fechaValida = false;
+	
+	if (!fechaValida) {
+	    cout << "Fecha invalida. Asegurate de que sea real y valida.\n";
+	    return;
+	}
+	
+	venta.setFechaNota(fecha);
+
 
     while (true) {
         string clave;
@@ -387,58 +486,55 @@ void Sistema::menuVentas() {
                 consola.esperarEnter();
                 break;
             }
-            case 2: { // Buscar por número de nota
-                string notaStr;
-                cout << "Ingrese numero de nota a buscar: ";
-                getline(cin, notaStr);
-                int nota = consola.convertirCadenaANumero(notaStr);
-                if (nota < 0) {
-                    cout << "Numero inválido.\n";
-                } else {
-                    Venta* v = gestor.buscarVentaPorNumeroNota(nota);
-                    if (v != nullptr) {
-                        cout << "Venta encontrada. Total: $" << v->getTotal() << "\n";
-                    } else {
-                        cout << "Venta no encontrada.\n";
-                    }
-                }
-                consola.esperarEnter();
-                break;
+            case 2: { // Buscar por número de not
+			    string notaStr;
+			    cout << "Ingrese numero de nota a buscar: ";
+			    getline(cin, notaStr);
+			    int nota = consola.convertirCadenaANumero(notaStr);
+			    if (nota < 0) {
+			        cout << "Numero invalido.\n";
+			    } else {
+			        Venta* v = gestor.buscarVentaPorNumeroNota(nota);
+			        if (v != nullptr) {
+			            mostrarDetalleVenta(*v);
+			        } else {
+			            cout << "Venta no encontrada.\n";
+			        }
+			    }
+			    consola.esperarEnter();
+			    break;
             }
             case 3: { // Buscar por fecha
-                string fechaStr;
-                cout << "Ingrese fecha (int) a buscar: ";
-                getline(cin, fechaStr);
-                int fecha = consola.convertirCadenaANumero(fechaStr);
-                if (fecha < 0) {
-                    cout << "Fecha inválida.\n";
-                } else {
-                    vector<Venta*> resultados = gestor.buscarVentasPorFecha(fecha);
-                    if (resultados.empty()) {
-                        cout << "No se encontraron ventas para esa fecha.\n";
-                    } else {
-                        for (Venta* v : resultados) {
-                            cout << "Nota: " << v->getNumeroNota() 
-                                 << " | Total: $" << v->getTotal() << "\n";
-                        }
-                    }
-                }
-                consola.esperarEnter();
-                break;
-            }
+			    string fechaStr;
+			    cout << "Ingrese fecha a buscar: ";
+			    getline(cin, fechaStr);
+			    int fecha = consola.convertirCadenaANumero(fechaStr);
+			    if (fecha < 0) {
+			        cout << "Fecha invalida.\n";
+			    } else {
+			        vector<Venta*> resultados = gestor.buscarVentasPorFecha(fecha);
+			        if (resultados.empty()) {
+			            cout << "No se encontraron ventas para esa fecha.\n";
+			        } else {
+			            for (Venta* v : resultados) {
+			                mostrarDetalleVenta(*v); 
+			            }
+			        }
+			    }
+			    consola.esperarEnter();
+			    break;
+			}
             case 4: {
                 cout << "Registro de venta.\n";
-                // Llamar a gestor.registrarVenta(...) desde algún flujo futuro
-                consola.esperarEnter();
+                realizarVenta(); 
+		    	guardarVentas(); 
+		    	guardarProductos(); 
+		    	consola.esperarEnter();
+		    	consola.limpiarConsola();
                 break;
             }
-            case 5: {
-                cout << "Funcionalidad de actualizar venta aún no implementada.\n";
-                consola.esperarEnter();
-                break;
-            }
-            case 6:
-                cout << "Saliendo de gestión de ventas...\n";
+            case 5:
+                cout << "Saliendo de gestion de ventas...\n";
                 break;
             default:
                 cout << "Opcion invalida.\n";
@@ -446,7 +542,7 @@ void Sistema::menuVentas() {
                 break;
         }
         consola.limpiarConsola();
-    } while (opc != 6);
+    } while (opc != 5);
 }
 
 void Gestor::mostrarVentas() {

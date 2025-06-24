@@ -2,6 +2,7 @@
 #define CONSOLA_H
 #include <string>
 #include <math.h>
+#include <vector>
 using namespace std;
 
 class Consola {
@@ -21,6 +22,8 @@ public:
 	void limpiarBufferEntrada();
 	string limpiarEspacios(const string& texto);
 	float convertirCadenaAFloat(const string& entrada);
+	vector<string> separarPorComas(string linea);
+
 };
 
 #endif

@@ -2,3 +2,4 @@ CLAVE |     NOMBRE     |     MARCA     | EXISTENCIA | PRECIO
 ------------------------------------------------------------
 777 |  | Platz Arnold | 0 | 20000
 33 | Mike | Mentzer | 0 | 23434
+90 | Cloro | Coca Cola | 42 | 20

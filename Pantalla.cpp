@@ -45,9 +45,8 @@ void Pantalla::mostrarMenuVentas() {
     cout << "\t2. Buscar por numero de nota\n";
     cout << "\t3. Buscar por fecha\n";
     cout << "\t4. Registrar nueva venta\n";
-    cout << "\t5. Actualizar venta\n";
-    cout << "\t6. Regresar al menu principal\n";
-    cout << "Seleccione una opción: ";
+    cout << "\t5. Regresar al menu principal\n";
+    cout << "Seleccione una opcion: ";
 }
 
 void Pantalla::mensajeEnter(){
